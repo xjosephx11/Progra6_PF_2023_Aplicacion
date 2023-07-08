@@ -1,0 +1,1 @@
+﻿Scaffold-DbContext -f "SERVER=.\MSSQLSERVER01; DATABASE=Progra6_PF_2023; INTEGRATED SECURITY=FALSE; USER ID= Progra6_PF_2023_User;PASSWORD=123456" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
