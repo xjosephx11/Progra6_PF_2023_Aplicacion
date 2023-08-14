@@ -21,7 +21,7 @@ namespace Progra6_PF_2023_Aplicacion.Models
         public int UsuarioRolId { get; set; }
         public bool IsBlocked { get; set; }
 
-        public virtual UsuarioRol UsuarioRol { get; set; } = null!;
+        public virtual UsuarioRol? UsuarioRol { get; set; } = null!;
         public virtual ICollection<Apartado> Apartados { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Progra6_PF_2023_Aplicacion.Attributes;
 using Progra6_PF_2023_Aplicacion.Models;
+using Progra6_PF_2023_Aplicacion.ModelsDTOs;
 
 namespace Progra6_PF_2023_Aplicacion.Controllers
 {
@@ -68,15 +69,109 @@ namespace Progra6_PF_2023_Aplicacion.Controllers
 
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUsuario(int id, Usuario usuario)
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutUsuario(int id, Usuario usuario)
+        //{
+        //    if (id != usuario.UsuarioId)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    _context.Entry(usuario).State = EntityState.Modified;
+
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!UsuarioExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
+
+        //    return NoContent();
+        //}
+
+        [HttpGet("GetUserInfoByEmail")]
+        public ActionResult<IEnumerable<UserDTO>> GetUserInfoByEmail(string Pemail)
         {
-            if (id != usuario.UsuarioId)
+            var query = (from u in _context.Usuarios
+                         join ur in _context.UsuarioRols on
+                         u.UsuarioRolId equals ur.UsuarioRolId
+                         where u.Email == Pemail && u.Avtivo == true &&
+                         u.IsBlocked == false
+                         select new
+                         {
+                             idusuario = u.UsuarioId,
+                             correo = u.Email,
+                             contrasennia = u.Contrasenia,
+                             nombre = u.Nombre,
+                             recuperarEmail = u.BackupEmail,
+                             telefono = u.Numero,
+                             activo = u.Avtivo,
+                             direccion = u.Addres,
+                             establoqueado = u.IsBlocked,
+                             idrol = ur.UsuarioRolId,
+                             descripcion = ur.Descripcion
+                         }).ToList();
+            List<UserDTO> list = new List<UserDTO> ();
+            foreach (var item in query) 
+            {
+                UserDTO NewItem = new UserDTO()
+                {
+                    IDUsuariodto = item.idusuario,
+                    Correodto = item.correo,
+                    Contraseniadto = item.contrasennia,
+                    Nombredto = item.nombre,
+                    correoRespaldodto = item.recuperarEmail,
+                    Telefonodto = item.telefono,
+                    Avtivodto = item.activo,
+                    direcciondto = item.direccion,
+                    estaBloqueadodto = item.establoqueado,
+                    idroldto = item.idrol,
+                    descripcionRoldto = item.descripcion
+                };
+                list.Add(NewItem);
+            }
+            if (list == null)
+            {
+                return NotFound();
+            }
+            return list;
+        }
+
+
+        // PUT: api/Users/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutUser(int id, UserDTO user)
+        {
+            if (id != user.IDUsuariodto)
             {
                 return BadRequest();
             }
 
-            _context.Entry(usuario).State = EntityState.Modified;
+
+            //tenemos que hacer la convercion entre el dto que llega en formato
+            //json  en el header y el objeto que entity framework entiende que es
+            //de tipo user
+
+            Usuario? NewEFUser = GetUSerByID(id);
+            if (NewEFUser != null)
+            {
+                NewEFUser.Email = user.Correodto;
+                NewEFUser.Nombre = user.Nombredto;
+                NewEFUser.BackupEmail = user.correoRespaldodto;
+                NewEFUser.Numero = user.Telefonodto;
+                NewEFUser.Addres = user.direcciondto;
+                _context.Entry(NewEFUser).State = EntityState.Modified;
+            }
 
             try
             {
@@ -94,8 +189,9 @@ namespace Progra6_PF_2023_Aplicacion.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok();
         }
+
 
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -117,6 +213,12 @@ namespace Progra6_PF_2023_Aplicacion.Controllers
         private bool UsuarioExists(int id)
         {
             return (_context.Usuarios?.Any(e => e.UsuarioId == id)).GetValueOrDefault();
+        }
+
+        private Usuario? GetUSerByID(int id)
+        {
+            var user = _context.Usuarios.Find(id);
+            return user;
         }
     }
 }
