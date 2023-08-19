@@ -19,7 +19,7 @@ namespace Progra6_PF_2023_Aplicacion.Models
         public int UsuarioId { get; set; }
         public int CategoriaProductoId { get; set; }
 
-        public virtual CategoriaProducto CategoriaProducto { get; set; } = null!;
-        public virtual ICollection<ApartadosProducto> ApartadosProductos { get; set; }
+        public virtual CategoriaProducto? CategoriaProducto { get; set; } = null!;
+        public virtual ICollection<ApartadosProducto>? ApartadosProductos { get; set; }
     }
 }

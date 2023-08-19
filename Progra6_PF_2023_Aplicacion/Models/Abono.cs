@@ -10,6 +10,6 @@ namespace Progra6_PF_2023_Aplicacion.Models
         public int ApartadosId { get; set; }
         public decimal MontoAbono { get; set; }
 
-        public virtual Apartado Apartados { get; set; } = null!;
+        public virtual Apartado? Apartados { get; set; } = null!;
     }
 }

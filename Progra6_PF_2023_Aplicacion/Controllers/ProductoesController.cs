@@ -12,7 +12,7 @@ namespace Progra6_PF_2023_Aplicacion.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Apikey]
+    //[Apikey]
     public class ProductoesController : ControllerBase
     {
         private readonly Progra6_PF_2023Context _context;
@@ -49,6 +49,25 @@ namespace Progra6_PF_2023_Aplicacion.Controllers
             }
 
             return producto;
+        }
+
+        // GET: api/Productoes/GetProductoListByUser?id=2'
+        //
+        [HttpGet("GetProductoListByUser")]
+        public async Task<ActionResult<IEnumerable<Producto>>> GetProductoListByUser(int id)
+        {
+            if (_context.Productos == null)
+            {
+                return NotFound();
+            }
+            var productoList = await _context.Productos.Where(p => p.UsuarioId.Equals(id)).ToListAsync();
+
+            if (productoList == null)
+            {
+                return NotFound();
+            }
+
+            return productoList;
         }
 
         // PUT: api/Productoes/5

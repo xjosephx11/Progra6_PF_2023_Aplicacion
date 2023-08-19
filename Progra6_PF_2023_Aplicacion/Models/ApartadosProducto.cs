@@ -10,7 +10,7 @@ namespace Progra6_PF_2023_Aplicacion.Models
         public decimal PrecioOriginal { get; set; }
         public decimal AbonoAgregado { get; set; }
 
-        public virtual Apartado ApartadosApartados { get; set; } = null!;
-        public virtual Producto ProductoProducto { get; set; } = null!;
+        public virtual Apartado? ApartadosApartados { get; set; } = null!;
+        public virtual Producto? ProductoProducto { get; set; } = null!;
     }
 }

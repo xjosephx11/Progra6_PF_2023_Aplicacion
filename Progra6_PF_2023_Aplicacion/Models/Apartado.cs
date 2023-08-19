@@ -19,8 +19,8 @@ namespace Progra6_PF_2023_Aplicacion.Models
         public DateTime FechaApartado { get; set; }
         public int UsuarioId { get; set; }
 
-        public virtual Usuario Usuario { get; set; } = null!;
-        public virtual ICollection<Abono> Abonos { get; set; }
-        public virtual ICollection<ApartadosProducto> ApartadosProductos { get; set; }
+        public virtual Usuario? Usuario { get; set; } = null!;
+        public virtual ICollection<Abono>? Abonos { get; set; }
+        public virtual ICollection<ApartadosProducto>? ApartadosProductos { get; set; }
     }
 }
